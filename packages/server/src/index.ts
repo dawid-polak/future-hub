@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import http from 'http';
+import path from 'path';
 import helmet from 'helmet';
 import cors from 'cors';
 import { config } from './config/index.js';
@@ -37,6 +38,13 @@ app.use('/api/roles', rolesRouter);
 app.use('/api/skills', skillsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/folders', foldersRouter);
+
+const clientPath = path.resolve(__dirname, '../../client/dist');
+app.use(express.static(clientPath));
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api/')) return next();
+  res.sendFile(path.join(clientPath, 'index.html'));
+});
 
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   logger.error('Unhandled error', { message: err.message, stack: err.stack });
