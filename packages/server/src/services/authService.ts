@@ -4,11 +4,11 @@ import { User } from '../models/user.js';
 import { JwtPayload } from '../middleware/jwtAuth.js';
 
 function signAccessToken(payload: JwtPayload): string {
-  return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn as string });
+  return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn } as jwt.SignOptions);
 }
 
 function signRefreshToken(payload: JwtPayload): string {
-  return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.refreshExpiresIn as string });
+  return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.refreshExpiresIn } as jwt.SignOptions);
 }
 
 export async function login(email: string, password: string) {
