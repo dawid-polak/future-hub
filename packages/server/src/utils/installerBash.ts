@@ -25,6 +25,9 @@ echo
 info "Future Hub installer — $COMPANY_NAME"
 echo
 
+if [ ! -t 0 ] && [ -e /dev/tty ]; then
+  exec < /dev/tty
+fi
 read -r -p "Email: " EMAIL
 read -r -s -p "Haslo: " PASS
 echo
