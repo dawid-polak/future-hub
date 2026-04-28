@@ -104,6 +104,11 @@ const routes = [
     name: 'apiDocs',
     component: () => import('../views/apiDocs.vue'),
   },
+  {
+    path: '/installer-guide',
+    name: 'installerGuide',
+    component: () => import('../views/installerGuide.vue'),
+  },
 ];
 
 export const router = createRouter({

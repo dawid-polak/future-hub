@@ -8,6 +8,7 @@ import {
   HomeIcon,
   CommandLineIcon,
   BookOpenIcon,
+  ArrowDownTrayIcon,
 } from '@heroicons/vue/24/outline';
 
 const route = useRoute();
@@ -20,6 +21,7 @@ const navigation = [
   { name: 'Role', href: '/roles', icon: ShieldCheckIcon },
   { label: 'SYSTEM' },
   { name: 'Analityka', href: '/analytics', icon: ChartBarIcon },
+  { name: 'Instalacja u pracownika', href: '/installer-guide', icon: ArrowDownTrayIcon },
   { name: 'Dokumentacja API', href: '/api-docs', icon: BookOpenIcon },
 ];
 

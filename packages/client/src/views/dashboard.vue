@@ -132,6 +132,22 @@ function formatUptime(seconds: number): string {
     <div v-if="loading" class="mt-8 text-center text-gray-400">Ladowanie...</div>
 
     <template v-else-if="dashboard">
+      <RouterLink
+        to="/installer-guide"
+        class="mt-6 flex items-center justify-between gap-4 rounded-lg bg-gradient-to-r from-primary-600 to-primary-700 p-5 text-white shadow hover:from-primary-700 hover:to-primary-800 transition-colors"
+      >
+        <div class="flex items-center gap-4">
+          <ArrowDownTrayIcon class="h-8 w-8 flex-shrink-0" />
+          <div>
+            <p class="text-base font-semibold">Instalacja u pracownika</p>
+            <p class="text-sm text-primary-100">
+              Komendy instalacyjne, instrukcja dla agenta AI i szablon e-maila — gotowe do skopiowania.
+            </p>
+          </div>
+        </div>
+        <span class="text-sm font-medium hidden sm:inline">Otwórz →</span>
+      </RouterLink>
+
       <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div class="rounded-lg bg-white p-5 shadow">
           <div class="flex items-center">
