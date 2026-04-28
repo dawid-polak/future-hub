@@ -29,16 +29,18 @@ read -r -p "Email: " EMAIL
 read -r -s -p "Haslo: " PASS
 echo
 
-LOGIN_RES=$(curl -fsS -X POST "$API_BASE/api/auth/login" \\
+LOGIN_BODY=$(jq -nc --arg e "$EMAIL" --arg p "$PASS" '{email:$e,password:$p}')
+LOGIN_RES=$(curl -sS -X POST "$API_BASE/api/auth/login" \\
   -H "Content-Type: application/json" \\
-  -d "{\\"email\\":\\"$EMAIL\\",\\"password\\":\\"$PASS\\"}" || true)
+  -d "$LOGIN_BODY" 2>/dev/null || true)
 
-ACCESS=$(echo "$LOGIN_RES" | jq -r '.accessToken // empty')
-REFRESH=$(echo "$LOGIN_RES" | jq -r '.refreshToken // empty')
-USER_NAME=$(echo "$LOGIN_RES" | jq -r '.user.name // empty')
+ACCESS=$(echo "$LOGIN_RES" | jq -r '.accessToken // empty' 2>/dev/null)
+REFRESH=$(echo "$LOGIN_RES" | jq -r '.refreshToken // empty' 2>/dev/null)
+USER_NAME=$(echo "$LOGIN_RES" | jq -r '.user.name // empty' 2>/dev/null)
 
 if [ -z "$ACCESS" ]; then
-  err "Logowanie nieudane. Sprawdz email/haslo."
+  ERR_MSG=$(echo "$LOGIN_RES" | jq -r '.error // "nieznany blad"' 2>/dev/null)
+  err "Logowanie nieudane: $ERR_MSG"
   exit 1
 fi
 ok "Zalogowano jako $USER_NAME"
@@ -78,10 +80,11 @@ SKILLS="$WORKDIR/skills"
 cmd="\${1:-sync}"
 
 refresh_access() {
-  local r
-  r=$(curl -fsS -X POST "$API/api/auth/refresh" \\
+  local body r
+  body=$(jq -nc --arg t "$REFRESH" '{refreshToken:$t}')
+  r=$(curl -sS -X POST "$API/api/auth/refresh" \\
     -H "Content-Type: application/json" \\
-    -d "{\\"refreshToken\\":\\"$REFRESH\\"}" 2>/dev/null || true)
+    -d "$body" 2>/dev/null || true)
   echo "$r" | jq -r '.accessToken // empty'
 }
 
