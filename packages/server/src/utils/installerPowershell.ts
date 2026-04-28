@@ -80,6 +80,9 @@ switch ($cmd) {
       Get-ChildItem $Skills -Filter *.md -ErrorAction SilentlyContinue | Remove-Item
       exit 1
     }
+    try {
+      Invoke-WebRequest -UseBasicParsing -Uri "$Api/api/installer/onboarding.md" -OutFile (Join-Path $Workdir "README.md") | Out-Null
+    } catch {}
     $data = Invoke-RestMethod -Uri "$Api/api/installer/skills/me" -Headers @{ Authorization = "Bearer $tok" }
     if (-not $data) { $data = @() }
     $current = @($data | ForEach-Object { $_.slug })
@@ -126,6 +129,14 @@ if ($userPath -notlike "*$BinDir*") {
   [Environment]::SetEnvironmentVariable("PATH", "$userPath;$BinDir", "User")
   $env:PATH += ";$BinDir"
   Ok "Dodano $BinDir do PATH (zrestartuj terminal)"
+}
+
+# Pobierz README.md (instrukcja dla agenta)
+try {
+  Invoke-WebRequest -UseBasicParsing -Uri "$ApiBase/api/installer/onboarding.md" -OutFile (Join-Path $Workdir "README.md") | Out-Null
+  Ok "Instrukcja dla agenta AI: $(Join-Path $Workdir 'README.md')"
+} catch {
+  Info "Nie udalo sie pobrac README.md (pobrane przy nastepnym sync)."
 }
 
 # Pierwsza synchronizacja

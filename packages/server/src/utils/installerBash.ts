@@ -106,6 +106,8 @@ case "$cmd" in
       rm -rf "$SKILLS"/*.md 2>/dev/null || true
       exit 1
     fi
+    # Aktualizuj README.md (instrukcja dla agenta)
+    curl -fsSL "$API/api/installer/onboarding.md" -o "$WORKDIR/README.md" 2>/dev/null || true
     DATA=$(curl -fsS "$API/api/installer/skills/me" -H "Authorization: Bearer $TOK")
     if [ -z "$DATA" ] || [ "$DATA" = "null" ]; then
       echo "Brak skili."
@@ -158,6 +160,11 @@ case ":$PATH:" in
     info "Dodaj do PATH: echo 'export PATH=\\"\\$HOME/.local/bin:\\$PATH\\"' >> ~/.bashrc"
     ;;
 esac
+
+# Pobierz instrukcję dla agenta AI (README.md w katalogu firmowym)
+curl -fsSL "$API_BASE/api/installer/onboarding.md" -o "$WORKDIR/README.md" 2>/dev/null \\
+  && ok "Instrukcja dla agenta AI zapisana: $WORKDIR/README.md" \\
+  || info "Nie udalo sie pobrac README.md (mozna pobrac pozniej: fh sync)"
 
 # Pierwsza synchronizacja
 info "Pobieram skille..."

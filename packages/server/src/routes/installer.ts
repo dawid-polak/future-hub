@@ -4,6 +4,7 @@ import { config } from '../config/index.js';
 import * as installerService from '../services/installerService.js';
 import { buildBashInstaller } from '../utils/installerBash.js';
 import { buildPowershellInstaller } from '../utils/installerPowershell.js';
+import { buildOnboardingMarkdown } from '../utils/installerOnboarding.js';
 
 export const installerRouter = Router();
 
@@ -32,4 +33,9 @@ installerRouter.get('/install.sh', (_req: Request, res: Response) => {
 installerRouter.get('/install.ps1', (_req: Request, res: Response) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.send(buildPowershellInstaller(config.installer.publicBaseUrl, config.installer.companyName));
+});
+
+installerRouter.get('/onboarding.md', (_req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+  res.send(buildOnboardingMarkdown(config.installer.publicBaseUrl, config.installer.companyName));
 });
