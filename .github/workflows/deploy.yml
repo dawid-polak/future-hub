@@ -27,7 +27,7 @@ jobs:
              cd ~/domains/$DOMAIN/public_nodejs && \
              git fetch origin production && \
              git reset --hard origin/production && \
-             npm install && \
+             npm install --workspace packages/server --workspace packages/client --include-workspace-root && \
              npm run build && \
              devil www restart $DOMAIN && \
              echo 'Deploy OK'"

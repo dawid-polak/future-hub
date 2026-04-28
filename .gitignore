@@ -6,3 +6,5 @@ storage/skills/*
 *.log
 .DS_Store
 *.tsbuildinfo
+packages/desktop/out/
+packages/desktop/release/

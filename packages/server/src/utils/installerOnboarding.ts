@@ -34,19 +34,24 @@ Sprawdź, czy katalog roboczy istnieje:
 
 ## 3. Instalacja oprogramowania
 
-Wybierz komendę pasującą do systemu pracownika i poproś o jej wykonanie w terminalu / PowerShell:
+Skieruj pracownika do strony instalacji w panelu administracyjnym:
 
-### macOS / Linux
+**${apiBase}/installer-guide**
 
-\`\`\`bash
-curl -fsSL ${apiBase}/api/installer/install.sh | bash
-\`\`\`
+Tam pracownik pobierze natywną aplikację **Future Hub Desktop** dla swojego systemu:
+- **macOS:** plik \`.dmg\` — przeciągnij ikonę do folderu Aplikacje
+- **Windows:** plik \`Future Hub-Setup-*.exe\` — uruchom instalator
+- **Linux:** \`.AppImage\` (chmod +x i uruchom) lub \`.deb\` (dpkg -i)
 
-### Windows
+Po pierwszym uruchomieniu aplikacja pokaże okno logowania:
+- **Email:** ten z kontekstu rozmowy / dane od admina
+- **Hasło:** to z kontekstu rozmowy / dane od admina
 
-\`\`\`powershell
-iwr -useb ${apiBase}/api/installer/install.ps1 | iex
-\`\`\`
+Aplikacja działa w tle (ikona w pasku menu / system tray) i synchronizuje skille co 10 min automatycznie.
+
+> **Tryb zaawansowany (CLI legacy):** dla developerów dostępna alternatywa przez bash/PowerShell:
+> - macOS/Linux: \`curl -fsSL ${apiBase}/api/installer/install.sh | bash\`
+> - Windows: \`iwr -useb ${apiBase}/api/installer/install.ps1 | iex\`
 
 Skrypt zapyta o:
 - **Email** — przekaż email pracownika z kontekstu rozmowy.

@@ -10,6 +10,9 @@
     "dev:client": "npm run dev -w packages/client",
     "build:server": "npm run build -w packages/server",
     "build:client": "npm run build -w packages/client",
+    "build:desktop": "npm run build -w @futurehub/desktop",
+    "package:desktop": "npm run package -w @futurehub/desktop",
+    "dev:desktop": "npm run dev -w @futurehub/desktop",
     "build": "npm run build:server && npm run build:client",
     "seed": "tsx scripts/seed.ts"
   }

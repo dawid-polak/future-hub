@@ -1,0 +1,17 @@
+export const IPC = {
+  AUTH_LOGIN: 'auth:login',
+  AUTH_LOGOUT: 'auth:logout',
+  AUTH_STATUS: 'auth:status',
+  SYNC_RUN: 'sync:run',
+  SYNC_PROGRESS: 'sync:progress',
+  SYNC_STATUS: 'sync:status',
+  SYSTEM_INFO: 'system:info',
+  SYSTEM_OPEN_WORKDIR: 'system:openWorkdir',
+  SYSTEM_OPEN_EXTERNAL: 'system:openExternal',
+  SETTINGS_GET: 'settings:get',
+  SETTINGS_SET: 'settings:set',
+  UPDATE_CHECK: 'update:check',
+  UPDATE_STATUS: 'update:status',
+  MIGRATION_STATUS: 'migration:status',
+  MIGRATION_RUN: 'migration:run',
+} as const;
