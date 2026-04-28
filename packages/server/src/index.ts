@@ -14,6 +14,7 @@ import { rolesRouter } from './routes/roles.js';
 import { skillsRouter } from './routes/skills.js';
 import { analyticsRouter } from './routes/analytics.js';
 import { foldersRouter } from './routes/folders.js';
+import { installerRouter } from './routes/installer.js';
 
 const app = express();
 let server: http.Server;
@@ -40,6 +41,7 @@ app.use('/api/roles', rolesRouter);
 app.use('/api/skills', skillsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/folders', foldersRouter);
+app.use('/api/installer', installerRouter);
 
 const clientPath = path.resolve(__dirname, '../../client/dist');
 app.use(express.static(clientPath));
