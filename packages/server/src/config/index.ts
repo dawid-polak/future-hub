@@ -22,4 +22,8 @@ export const config = {
     max: parseInt(process.env.RATE_LIMIT_MAX || '100', 10),
   },
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  installer: {
+    companyName: process.env.COMPANY_NAME || 'FutureHub',
+    publicBaseUrl: process.env.PUBLIC_BASE_URL || 'http://localhost:3000',
+  },
 };
