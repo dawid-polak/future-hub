@@ -18,6 +18,8 @@ import { foldersRouter } from './routes/folders.js';
 const app = express();
 let server: http.Server;
 
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(cors({ origin: config.corsOrigin, credentials: true }));
 app.use(express.json());
