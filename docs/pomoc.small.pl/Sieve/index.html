@@ -1,0 +1,2798 @@
+
+<!doctype html>
+<html lang="pl" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Przekierowanie_e-mail/index.html">
+      
+      
+        <link rel="next" href="../SPF/index.html">
+      
+      
+      <link rel="icon" href="../SMALL/assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.28">
+    
+    
+      
+        <title>Sieve - Dokumentacja</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../SMALL/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="index.html#sieve" class="md-skip">
+          Przejdź do treści
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Nagłówek">
+    <a href="../index.html" title="Dokumentacja" class="md-header__button md-logo" aria-label="Dokumentacja" data-md-component="logo">
+      
+  <img src="../SMALL/assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Dokumentacja
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sieve
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="green"  aria-label="Przełącz na tryb ciemny"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Przełącz na tryb ciemny" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="green"  aria-label="Przełącz na tryb jasny"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Przełącz na tryb jasny" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Szukaj" placeholder="Szukaj" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Szukaj">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Wyczyść" aria-label="Wyczyść" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicjowanie wyszukiwania
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Nawigacja" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Dokumentacja" class="md-nav__button md-logo" aria-label="Dokumentacja" data-md-component="logo">
+      
+  <img src="../SMALL/assets/logo.svg" alt="logo">
+
+    </a>
+    Dokumentacja
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Strona główna
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Podstawy/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Podstawy
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Podstawy
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Backup/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Backup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Logowanie/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logowanie
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Logowanie_kluczem/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logowanie kluczem
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Uwierzytelnianie_dwuskladnikowe/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Uwierzytelnianie dwuskładnikowe
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Binexec/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binexec
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Rezerwacja_portów/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rezerwacja portów
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Przydatne_polecenia/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Przydatne polecenia
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Srodowisko/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Środowisko
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zmiana_hasla/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Zmiana hasła
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cron/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Zadania Cron
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Vhost/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adresy IP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Fingerprint/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fingerprint
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Poradniki/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Poradniki
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Poradniki
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WordPress/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WordPress
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Redis/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Redis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Memcached/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memcached
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Imapsync/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Imapsync
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Composer/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Composer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WP-CLI/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tomcat/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tomcat
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Redmine/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Redmine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Devil/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Devil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DevilWEB/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DevilWEB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Strona_WWW.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Strony WWW
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Strony WWW
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../htaccess/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    .htaccess
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHP/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PHP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Node.js/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node.js
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Django/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Django
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flask/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flask
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RVM.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ruby
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ruby_on_Rails/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ruby on Rails
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Catalyst/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalyst
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CGI/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CGI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SSL/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SSL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WAF/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WAF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PoW/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PoW
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cache/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Logi/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logi
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WP-CLI/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WP-CLI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Transfer_plików/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Transfer plików
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Transfer plików
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FTP/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SFTP/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SFTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Poczta/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Poczta
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Poczta
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SSL/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SSL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Autoresponder/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Autoresponder
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Przekierowanie_e-mail/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Przekierowanie e-mail
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Sieve
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="index.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Sieve
+  </span>
+  
+
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Spis treści">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Spis treści
+    </label>
+    <ul class="md-nav__list md-nav__list--toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="index.html#składnia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Składnia
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#porównania" class="md-nav__link">
+    <span class="md-ellipsis">
+      Porównania
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#konstrukcja" class="md-nav__link">
+    <span class="md-ellipsis">
+      Konstrukcja
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#akcje" class="md-nav__link">
+    <span class="md-ellipsis">
+      Akcje
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#komentarz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Komentarz
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#przykłady" class="md-nav__link">
+    <span class="md-ellipsis">
+      Przykłady
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#spam" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spam
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#zobacz-też" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zobacz też
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+
+  
+  
+      
+  
+  
+
+  <label class="md-nav__title" for="__tags">Tagi</label>
+  <ul class="md-nav__list md-nav__list--tags" data-md-scrollfix>
+    <li class="md-nav__item md-nav__item--tags">
+    
+      <a href="../tags/index.html#poczta" class="md-nav__item--tag"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 80v149.5c0 17 6.7 33.3 18.7 45.3l176 176c25 25 65.5 25 90.5 0l133.5-133.5c25-25 25-65.5 0-90.5l-176-176c-12-12-28.3-18.7-45.3-18.7H48C21.5 32 0 53.5 0 80zm112 32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> Poczta</a>
+    
+    </li>
+  </ul>
+
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SPF/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SPF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Imapsync/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Imapsync
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Strefy_DNS/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Strefy DNS
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Strefy DNS
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Konfiguracja_DNS/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Konfiguracja DNS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Delegacja_DNS/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Delegacja DNS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SPF/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SPF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Bazy_danych/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Bazy danych
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Bazy danych
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MySQL/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MySQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PostgreSQL/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PostgreSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MongoDB/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MongoDB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Redis/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Redis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Memcached/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memcached
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Repozytoria/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Repozytoria
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Repozytoria
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Git/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GIT
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Subversion/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SVN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mercurial/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mercurial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../Jezyki_programowania/index.html" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Języki programowania
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            Języki programowania
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PHP/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PHP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Node.js/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node.js
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RVM.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ruby
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Java/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Java
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Catalyst/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Perl
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Kotlin/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kotlin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mise/index.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mise
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Spis treści">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Spis treści
+    </label>
+    <ul class="md-nav__list md-nav__list--toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="index.html#składnia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Składnia
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#porównania" class="md-nav__link">
+    <span class="md-ellipsis">
+      Porównania
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#konstrukcja" class="md-nav__link">
+    <span class="md-ellipsis">
+      Konstrukcja
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#akcje" class="md-nav__link">
+    <span class="md-ellipsis">
+      Akcje
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#komentarz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Komentarz
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#przykłady" class="md-nav__link">
+    <span class="md-ellipsis">
+      Przykłady
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#spam" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spam
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="index.html#zobacz-też" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zobacz też
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+
+  
+  
+      
+  
+  
+
+  <label class="md-nav__title" for="__tags">Tagi</label>
+  <ul class="md-nav__list md-nav__list--tags" data-md-scrollfix>
+    <li class="md-nav__item md-nav__item--tags">
+    
+      <a href="../tags/index.html#poczta" class="md-nav__item--tag"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 80v149.5c0 17 6.7 33.3 18.7 45.3l176 176c25 25 65.5 25 90.5 0l133.5-133.5c25-25 25-65.5 0-90.5l-176-176c-12-12-28.3-18.7-45.3-18.7H48C21.5 32 0 53.5 0 80zm112 32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg> Poczta</a>
+    
+    </li>
+  </ul>
+
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+<nav class="md-tags" hidden>
+  
+    
+    
+    
+      <a href="../tags/index.html#poczta" class="md-tag">Poczta</a>
+    
+  
+</nav>
+
+
+
+<h1 id="sieve">Sieve<a class="headerlink" href="index.html#sieve" title="Permanent link">&para;</a></h1>
+<p><em>Sieve</em> to skryptowy język służący do automatyzacji wielu zadań związanych z <a href="../Poczta/index.html">kontami pocztowymi</a> (na przykład automatycznemu odpowiadaniu, kopiowaniu wiadomości na inny adres, czy odrzucaniem niektórych wiadomości). Skrypt <em>Sieve</em> działa <code>po stronie serwera</code>.</p>
+<p>Zarządzenie skryptem Sieve jest możliwe z:</p>
+<ul>
+<li>programu pocztowego (np. w <code>Thunderbird</code> wymagany <a href="https://github.com/thsmi/sieve">dodatkowy add-on</a>)</li>
+<li>skryptu <em>perl</em> <code>sieve-connect</code> - zainstalowany na serwerach SMALL.PL</li>
+<li>webmaila <a href="https://poczta.small.pl/">Roundcube</a> (<code>Ustawienia</code> → <code>Filtry</code>) - nie jest wymagana znajomość składni.</li>
+</ul>
+<p>Struktura skryptu <em>Sieve</em> nie jest skomplikowana i do napisania najprostszej reguły nie potrzeba znać żadnego języka programowania. Skrypt składa się z listy prostych poleceń, takich jak: <code>fileinto</code> (przenieś do folderu), <code>if</code> (jeśli jakiś warunek jest spełniony), <code>discard</code> (odrzuć), etc.</p>
+<h2 id="składnia">Składnia<a class="headerlink" href="index.html#składnia" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">require</span> <span class="p">[</span><span class="s">&quot;fileinto&quot;</span><span class="p">,</span> <span class="s">&quot;reject&quot;</span><span class="p">,</span> <span class="s">&quot;vacation&quot;</span><span class="p">,</span> <span class="s">&quot;regex&quot;</span><span class="p">,</span> <span class="s">&quot;relational&quot;</span><span class="p">,</span> <span class="s">&quot;comparator-i;ascii-numeric&quot;</span><span class="p">];</span>
+
+<span class="nb">if</span> <span class="nb">size</span> <span class="nt">:over</span> <span class="m">1024K</span> <span class="p">{</span>
+  <span class="nb">reject</span> <span class="s">&quot;Wiadomość niedostarczona. Zbyt duży rozmiar.&quot;</span><span class="p">;</span>
+  <span class="nb">stop</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>require["..."];</code> - ta linia informuje z jakich modułów będziemy korzystać (<code>fileinto</code> do umieszczenia wiadomości w folderze, <code>reject</code> do odrzucania wiadomości, <code>vacation</code> do wysyłania automatycznej wiadomości, <code>regex</code> do wykorzystania wyrażeń regularnych oraz <code>relational</code> wraz z <code>comparator-i;ascii-numeric</code> do porównań numerycznych).</p>
+<p><code>if size :over 1024K {</code> - Ta linia sprawdza czy rozmiar wiadomości jest większy niż <code>1024 KB</code>.</p>
+<p><code>reject "(...)";</code> - w tej linii wiadomość jest odrzucana.</p>
+<p><code>stop;</code> - w tej linii <em>Steve</em> przestaje analizować dalszą część skryptu.</p>
+<p><code>}</code> - nawias zamykający to, co się dzieje po spełnieniu warunku w <code>if</code>.</p>
+<h2 id="test">Test<a class="headerlink" href="index.html#test" title="Permanent link">&para;</a></h2>
+<p><code>size</code> - sprawdza czy rozmiar wiadomości jest większy <code>:over</code>, bądź mniejszy <code>:under</code> od podanej wartości w <code>M</code> (megabajtach), <code>K</code> (kilobajtach) bądź domyślnie w bajtach (na przykład <code>10M</code>, <code>20K</code>, <code>1024</code>).</p>
+<p><code>header</code> - sprawdzanie pól nagłówka.</p>
+<p><code>address</code> - sprawdzanie tylko adresu z nagłówka. Na przykład wiadomość wysłano jako <code>Jan Nowak &lt;jnowak@domena&gt;</code>. Zdanie <code>header "From" :is "jnowak@domena"</code> jest fałszywe, natomiast <code>address :is "jnowak@domena"</code> jest prawdziwe.</p>
+<p><code>allof (lista testów)</code> - zwraca <code>prawdę</code> tylko wtedy, gdy każdy z testów z listy jest prawdziwy.</p>
+<p><code>anyof (lista testów)</code> - zwraca <code>prawdę</code>, gdy dowolny z testów z listy jest prawdziwy.</p>
+<p><code>true</code> - zawsze zwraca <code>prawdę</code>.</p>
+<p><code>false</code> - zawsze zwraca <code>fałsz</code>.</p>
+<p><code>not &lt;test&gt;</code> - zwraca <code>fałsz</code> gdy test <code>zwrócił prawdę</code> i vice-versa.</p>
+<h2 id="porównania">Porównania<a class="headerlink" href="index.html#porównania" title="Permanent link">&para;</a></h2>
+<p><code>:is</code> - wartość testowanego pola musi być identyczna z podanym parametrem.</p>
+<p><code>:matches</code> - wartość testowanego pola musi pasować do podanego wzorca. We wzorcu poza znakami można używać <code>*</code> - zero lub więcej dowolnych znaków oraz <code>?</code> - dokładanie jeden dowolny znak.</p>
+<p><code>:contains</code> - wartość testowanego pola musi zawierać podany parametr.</p>
+<p><code>:over</code> - działa tylko dla liczb. Jeżeli podana wartość jest większa niż sprawdzana wartość zwraca <code>prawdę</code>.</p>
+<p><code>:under</code> - działa tylko dla liczb. Jeżeli podana wartość jest mniejsza niż sprawdzana wartość zwraca <code>prawdę</code>.</p>
+<p><code>:count</code> - pozwala przeliczać ile jest pozycji w danym polu.</p>
+<h2 id="konstrukcja">Konstrukcja<a class="headerlink" href="index.html#konstrukcja" title="Permanent link">&para;</a></h2>
+<p><code>[...]</code> - nawiasy kwadratowe służą do wskazywania grup. Na przykład <code>["Jan","Adam","Michał"]</code> wskazuje grupę trzech osób.</p>
+<p><code>{...}</code> - nawiasy klamrowe służą do wskazywania bloku instrukcji, które muszą zostać wykonane jeżeli wynik testu będzie prawdą.</p>
+<p><code>if</code> - służy do sprawdzania czy podane wyrażenie jest <code>prawdziwe</code>. Jeżeli jest to wykonywany jest blok instrukcji podany po <code>if</code>.</p>
+<p><code>else</code> - w przypadku gdy wyrażenie w <code>if</code> jest <code>fałszywe</code> to wykonywane jest blok instrukcji podany po <code>else</code>.</p>
+<p><code>elseif</code> - połączenie <code>else</code> i <code>if</code>. Gdy wyrażenie w <code>if</code> jest fałszywe to wykonywany jest kolejny <code>if</code>.</p>
+<p><code>stop</code> - kończy działanie skryptu.</p>
+<h2 id="akcje">Akcje<a class="headerlink" href="index.html#akcje" title="Permanent link">&para;</a></h2>
+<p><code>keep</code> - zatrzymuje wiadomość w obecnym folderze.</p>
+<p><code>fileinto "NAZWAFOLDERU"</code> - przenosi wiadomość do wskazanego folderu. Jeżeli ten nie istnieje, to wiadomość trafi do skrzynki odbiorczej.</p>
+<p><code>discard</code> - usuwa wiadomość bez powiadamiania o tym nadawcy.</p>
+<p><code>reject "POWÓD"</code> - zwraca wiadomość z błędem do nadawcy z opcjonalnym powodem.</p>
+<p><code>redirect "ADRES_EMAIL"</code> - wysyła dalej wiadomość bez zatrzymania jej kopii o ile <code>keep</code> bądź <code>fileinto</code> nie zostanie wykonane.</p>
+<h2 id="komentarz">Komentarz<a class="headerlink" href="index.html#komentarz" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Komentarz jednoliniowy od znaku &#39;#&#39; do końca linii. Treść jest ignorowana przez parser Sieve.</span>
+<span class="err">/*</span> <span class="err">Komentarz</span> <span class="err">blokowy</span>
+ <span class="err">*</span> <span class="err">Wszystkie</span> <span class="err">linijki</span> <span class="err">są</span> <span class="err">ignorowane</span> <span class="err">od</span> <span class="err">momentu</span> <span class="err">rozpoczęcia</span> <span class="err">komentarza</span> <span class="err">ciągiem</span> <span class="err">znaków</span> <span class="err">&#39;/*&#39;</span><span class="p">,</span>
+ <span class="err">*</span> <span class="err">aż</span> <span class="err">do</span> <span class="err">momentu</span> <span class="err">zakończenia</span> <span class="err">komentarza</span> <span class="err">ciągiem</span> <span class="err">znaków</span> <span class="err">*/</span>
+</code></pre></div>
+<h2 id="przykłady">Przykłady<a class="headerlink" href="index.html#przykłady" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Na wiadomości kierowane do <code>jan.nowak@domena</code> i <code>j.nowak@domena</code> będzie wysyłana automatyczna odpowiedź (przykład konfiguracji z poziomu <a href="https://poczta.small.pl/">Webmail Roundcube</a> - <a href="../Autoresponder/index.html">Autoresponder</a>):</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">require</span> <span class="p">[</span><span class="s">&quot;vacation&quot;</span><span class="p">];</span>
+<span class="nb">vacation</span>
+  <span class="c1"># Wyślij maksymalnie raz dziennie do tego samego adresata</span>
+  <span class="nt">:days</span> <span class="m">1</span>
+  <span class="nt">:subject</span> <span class="s">&quot;Poza biurem - odpowiedź automatyczna&quot;</span>
+  <span class="nt">:addresses</span> <span class="p">[</span><span class="s">&quot;jan.nowak@domena&quot;</span><span class="p">,</span> <span class="s">&quot;j.nowak@domena&quot;</span><span class="p">]</span>
+<span class="s">&quot;Dzień dobry,</span>
+<span class="s">jestem poza biurem, proszę się kontaktować z Adamem Nowakiem - adam.nowak@domena.</span>
+<span class="s">Pozdrawiam,</span>
+<span class="s">Jan Nowak&quot;</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>Wiadomości od <code>newsletter@domena</code> będą trzymane w folderze <code>INBOX.Newsletters</code>:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span> <span class="nb">address</span> <span class="nt">:is</span> <span class="s">&quot;From&quot;</span> <span class="s">&quot;newsletter@domena&quot;</span> <span class="p">{</span>
+  <span class="nb">fileinto</span> <span class="s">&quot;INBOX.Newsletters&quot;</span><span class="p">;</span>
+  <span class="nb">stop</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Wiadomości z domeny <code>domena</code> będą trzymane w folderze <code>INBOX.Example</code>:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span> <span class="nb">address</span> <span class="nt">:is</span> <span class="s">&quot;From&quot;</span> <span class="s">&quot;newsletter@mypals.org&quot;</span> <span class="p">{</span>
+  <span class="nb">fileinto</span> <span class="s">&quot;INBOX.Example&quot;</span><span class="p">;</span>
+  <span class="nb">stop</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Usuwa wiadomości z podanymi typami załączników:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span> <span class="nb">header</span> <span class="nt">:contains</span> <span class="s">&quot;x-attached&quot;</span>
+  <span class="p">[</span><span class="s">&quot;.exe&quot;</span><span class="p">,</span><span class="s">&quot;.bat&quot;</span><span class="p">,</span><span class="s">&quot;.js&quot;</span><span class="p">,</span><span class="s">&quot;.com&quot;</span><span class="p">,</span><span class="s">&quot;.cmd&quot;</span><span class="p">,</span><span class="s">&quot;.ini&quot;</span><span class="p">,</span><span class="s">&quot;.dll&quot;</span><span class="p">,</span><span class="s">&quot;.bas&quot;</span><span class="p">,</span><span class="s">&quot;.cpl&quot;</span><span class="p">,</span><span class="s">&quot;.drv&quot;</span><span class="p">,</span><span class="s">&quot;.inf&quot;</span><span class="p">,</span><span class="s">&quot;.sys&quot;</span><span class="p">,</span><span class="s">&quot;.pif&quot;</span><span class="p">]</span> <span class="p">{</span>
+  <span class="nb">discard</span><span class="p">;</span>
+  <span class="nb">stop</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Odrzuca wiadomości większe niż <code>5MB</code> powiadamiając o tym nadawcę.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span> <span class="nb">size</span> <span class="nt">:over</span> <span class="m">5M</span> <span class="p">{</span>
+   <span class="nb">reject</span> <span class="s">&quot;Wielkość wiadomości maksymalnie 5MB.&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Wiadomości od <code>Adam Adamski</code>, które nie zostały nikomu innemu przesłane będą trzymane w folderze <code>INBOX.Adam</code>:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">if</span> <span class="nb">allof</span><span class="p">(</span>
+  <span class="nb">header</span> <span class="nt">:contains</span> <span class="p">[</span><span class="s">&quot;From&quot;</span><span class="p">]</span> <span class="s">&quot;Adam Adamski&quot;</span><span class="p">,</span>
+  <span class="nb">header</span> <span class="nt">:is</span> <span class="p">[</span><span class="s">&quot;Bcc:&quot;</span><span class="p">,</span><span class="s">&quot;Cc:&quot;</span><span class="p">]</span> <span class="s">&quot;&quot;</span>
+<span class="p">){</span>
+  <span class="nb">fileinto</span> <span class="s">&quot;INBOX.Adam&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Uwaga</p>
+<p>W przypadku gdy nie utworzy się dowiązanie symboliczne do skryptu, należy utworzyć je ręcznie. Przejdź do katalogu skrzynki poleceniem: <code>cd ~/mail/ADRES@EMAIL</code> (gdzie <code>ADRES@EMAIL</code> to adres utworzonej skrzynki) i wykonaj polecenie: <code>ln -s sieve/managesieve.sieve .dovecot.sieve</code> (<code>managesieve.sieve</code> - domyślna nazwa skryptu).</p>
+</div>
+<h2 id="spam">Spam<a class="headerlink" href="index.html#spam" title="Permanent link">&para;</a></h2>
+<p>Opcje konfiguracji dotyczące zachowania wobec wiadomości wykrytych jako <em>spam</em> są dostępne poprzez <a href="../Poczta/index.html#spam">Devil jak i DevilWEB</a>. Przez <em>Sieve</em> (w tym poprzez edytor wizualny dostępny w webmail) można dodać m.in. dodatkowe akcje wobec wiadomości wykrytych jako spam, otrzymujących daną wartość punktową.</p>
+<p>Do wiadomości e-mail dodawane są nagłówki:</p>
+<ul>
+<li><code>X-Spam-Status</code> - informujący o prawdopodobieństwie spamu (<code>0</code> - normalna wiadomość, <code>5</code> - prawdopodobny spam, <code>&gt;10</code> - automatyczne odrzucanie wiadomości przez serwer) wraz ze wskazaniem punktacji powodu przyznania punktów.</li>
+<li><code>X-Spam-Level</code> - oznaczenie punktacji w formie gwiazdek z zaokrągleniem (przykładowo przyznany 1 punkt w zaokrągleniu widoczny jest jako jedna gwiazdka, dwa punkty w zaokrągleniu jako dwie gwiazdki).</li>
+<li><code>X-Spam-Flag</code> - informujący o tym, że wiadomość została zidentyfikowana jako spam.</li>
+</ul>
+<h2 id="zobacz-też">Zobacz też<a class="headerlink" href="index.html#zobacz-też" title="Permanent link">&para;</a></h2>
+<p><a href="../Autoresponder/index.html">Autoresponder</a><br />
+<a href="../Przekierowanie_e-mail/index.html">Przekierowanie e-mail</a><br />
+<a href="../SpamAssassin/index.html">SpamAssassin</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+    
+    <nav class="md-footer__inner md-grid" aria-label="footer.title" >
+      
+        
+        <a href="../Przekierowanie_e-mail/index.html" class="md-footer__link md-footer__link--prev" aria-label="Poprzednia strona: Przekierowanie e-mail" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Poprzednia strona
+              </span>
+              Przekierowanie e-mail
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../SPF/index.html" class="md-footer__link md-footer__link--next" aria-label="Następna strona: SPF" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Następna strona
+              </span>
+              SPF
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer__meta__copy">
+        
+    &copy; 2021 - 2025 <a href="https://admin.net.pl/" target="_blank">ADMIN.NET.PL</a> <em>&bull;</em> <span>Wszelkie prawa zastrzeżone.</span>
+
+      </div>
+      
+        <div class="md-footer__meta__made">
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        </div>
+      
+      
+        <div class="md-footer__meta__social">
+          
+  
+  
+  <a href="https://facebook.com/smallpl" target="_blank" rel="noopener" title="SMALL.PL na Facebooku" class="md-social__link">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M80 299.3V512h116V299.3h86.5l18-97.8H196v-34.6c0-51.7 20.3-71.5 72.7-71.5 16.3 0 29.4.4 37 1.2V7.9C291.4 4 256.4 0 236.2 0 129.3 0 80 50.5 80 159.4v42.1H14v97.8h66z"/></svg>
+  </a>
+
+  
+  
+  <a href="https://twitter.com/smallhostpl" target="_blank" rel="noopener" title="SMALL.PL na X" class="md-social__link">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+  </a>
+
+        </div>
+      
+    </div>
+  </div>
+</footer>
+
+<span data-scroll-top class="fas fa-angle-up"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"/></svg></span>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Skopiowano do schowka", "clipboard.copy": "Kopiuj do schowka", "search.result.more.one": "1 wi\u0119cej na tej stronie", "search.result.more.other": "# wi\u0119cej na tej stronie", "search.result.none": "Brak wynik\u00f3w wyszukiwania", "search.result.one": "Wyniki wyszukiwania: 1", "search.result.other": "Wyniki wyszukiwania: #", "search.result.placeholder": "Zacznij pisa\u0107, aby szuka\u0107", "search.result.term.missing": "Brak", "select.version": "Wybierz wersj\u0119"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="../SMALL/javascripts/jquery.js"></script>
+      
+        <script src="../SMALL/javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>

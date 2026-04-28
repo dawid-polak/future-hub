@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+storage/skills/*
+!storage/skills/.gitkeep
+*.log
+.DS_Store
+*.tsbuildinfo
