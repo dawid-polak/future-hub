@@ -5,6 +5,7 @@ import * as installerService from '../services/installerService.js';
 import { buildBashInstaller } from '../utils/installerBash.js';
 import { buildPowershellInstaller } from '../utils/installerPowershell.js';
 import { buildOnboardingMarkdown } from '../utils/installerOnboarding.js';
+import { getDesktopManifest } from '../services/desktopManifestService.js';
 
 export const installerRouter = Router();
 
@@ -38,4 +39,13 @@ installerRouter.get('/install.ps1', (_req: Request, res: Response) => {
 installerRouter.get('/onboarding.md', (_req: Request, res: Response) => {
   res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
   res.send(buildOnboardingMarkdown(config.installer.publicBaseUrl, config.installer.companyName));
+});
+
+installerRouter.get('/desktop/manifest', async (_req: Request, res: Response) => {
+  try {
+    const manifest = await getDesktopManifest();
+    res.json(manifest);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
 });

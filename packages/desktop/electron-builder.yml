@@ -1,0 +1,64 @@
+appId: pl.smallhost.futurehub
+productName: Future Hub
+copyright: Copyright © 2026 FutureAI
+directories:
+  output: release
+  buildResources: build
+files:
+  - 'out/**/*'
+  - 'resources/**/*'
+  - '!**/node_modules/*/{CHANGELOG.md,README.md,readme.md,readme}'
+  - '!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}'
+  - '!**/*.{md,markdown}'
+asarUnpack:
+  - resources/**
+
+mac:
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+  category: public.app-category.productivity
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  notarize: false
+  icon: resources/icon.icns
+
+dmg:
+  artifactName: ${productName}-${version}-${arch}.${ext}
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: resources/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+  artifactName: ${productName}-Setup-${version}.${ext}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Utility
+  icon: resources/icon.png
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
+publish:
+  provider: github
+  owner: dawid-polak
+  repo: future-hub

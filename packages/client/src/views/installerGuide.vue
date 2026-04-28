@@ -10,14 +10,28 @@ import {
   DocumentTextIcon,
 } from '@heroicons/vue/24/outline';
 
+interface DesktopManifest {
+  version: string;
+  releasedAt: string | null;
+  available: boolean;
+  urls: { mac: string | null; win: string | null; linuxAppImage: string | null; linuxDeb: string | null };
+  sizes: { mac: number | null; win: number | null; linuxAppImage: number | null; linuxDeb: number | null };
+  releaseUrl: string;
+}
+
 const info = ref<{ companyName: string; apiBase: string } | null>(null);
+const manifest = ref<DesktopManifest | null>(null);
 const loading = ref(true);
 const copied = ref<string | null>(null);
 
 onMounted(async () => {
   try {
-    const { data } = await api.get('/installer/info');
-    info.value = data;
+    const [infoRes, manifestRes] = await Promise.all([
+      api.get('/installer/info'),
+      api.get('/installer/desktop/manifest').catch(() => ({ data: null })),
+    ]);
+    info.value = infoRes.data;
+    manifest.value = manifestRes.data;
   } catch (e) {
     console.error(e);
   } finally {
@@ -28,15 +42,23 @@ onMounted(async () => {
 const apiBase = computed(() => info.value?.apiBase || window.location.origin);
 const companyName = computed(() => info.value?.companyName || 'FutureHub');
 
-const cmdMac = computed(
-  () => `curl -fsSL ${apiBase.value}/api/installer/install.sh | bash`
-);
-const cmdWin = computed(
-  () => `iwr -useb ${apiBase.value}/api/installer/install.ps1 | iex`
-);
+const cmdMac = computed(() => `curl -fsSL ${apiBase.value}/api/installer/install.sh | bash`);
+const cmdWin = computed(() => `iwr -useb ${apiBase.value}/api/installer/install.ps1 | iex`);
 const onboardingUrl = computed(() => `${apiBase.value}/api/installer/onboarding.md`);
-const installShUrl = computed(() => `${apiBase.value}/api/installer/install.sh`);
-const installPs1Url = computed(() => `${apiBase.value}/api/installer/install.ps1`);
+
+const detectedOs = computed<'mac' | 'win' | 'linux' | 'other'>(() => {
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes('mac')) return 'mac';
+  if (ua.includes('win')) return 'win';
+  if (ua.includes('linux')) return 'linux';
+  return 'other';
+});
+
+function fmtSize(bytes: number | null): string {
+  if (!bytes) return '—';
+  const mb = bytes / 1024 / 1024;
+  return `${mb.toFixed(1)} MB`;
+}
 
 const emailTemplate = computed(
   () => `Witaj w ${companyName.value}!
@@ -45,20 +67,25 @@ Twoje dane logowania:
   Email:   <wpisz email pracownika>
   Haslo:   <wpisz haslo pracownika>
 
-KROK 1 — Skopiuj instrukcje dla swojego asystenta AI:
+KROK 1 — Pobierz aplikację Future Hub Desktop dla swojego systemu:
+${apiBase.value}/installer-guide
+
+(Wybierz wersję dla macOS, Windows lub Linux i zainstaluj)
+
+KROK 2 — Po pierwszym uruchomieniu aplikacja pokaże okno logowania.
+Wpisz email i hasło które otrzymałeś powyżej.
+
+KROK 3 — Aplikacja działa w tle (ikona w pasku menu / system tray)
+i automatycznie synchronizuje skille co 10 minut.
+
+KROK 4 — Skopiuj instrukcje dla swojego asystenta AI:
 ${onboardingUrl.value}
 
-Otworz powyzszy link w przegladarce, zaznacz cala tresc (Ctrl+A) i wklej jako pierwsza wiadomosc do Claude.
+Otworz powyzszy link w przegladarce, zaznacz cala tresc (Ctrl+A) i wklej
+jako pierwsza wiadomosc do Claude.
 
-KROK 2 — Asystent poprowadzi Cie przez instalacje. Bedzie potrzebowal:
-  - jednego polecenia w terminalu (poda je),
-  - Twojego emaila i hasla (mozesz mu je przekazac),
-
-KROK 3 — Po instalacji znajdziesz swoj katalog roboczy w:
+KROK 5 — Twój katalog roboczy znajdziesz w:
   ~/${companyName.value}/
-
-Znajda sie tam wszystkie skille i dokumenty firmy ${companyName.value}, do ktorych masz dostep.
-Aktualizuja sie automatycznie co 10 minut.
 
 Powodzenia!
 `
@@ -72,7 +99,6 @@ async function copy(label: string, text: string) {
       if (copied.value === label) copied.value = null;
     }, 2000);
   } catch {
-    // fallback dla starych przeglądarek
     const ta = document.createElement('textarea');
     ta.value = text;
     document.body.appendChild(ta);
@@ -92,14 +118,14 @@ async function copy(label: string, text: string) {
     <div class="mb-8">
       <h1 class="text-2xl font-bold text-gray-900">Instalacja u pracownika</h1>
       <p class="mt-2 text-sm text-gray-600">
-        Materiały do udostępnienia pracownikowi — komendy instalacyjne, instrukcja dla agenta AI oraz gotowy szablon e-maila.
+        Materiały do udostępnienia pracownikowi — pobranie aplikacji desktop, instrukcja dla agenta AI, szablon e-maila.
       </p>
     </div>
 
     <div v-if="loading" class="text-gray-500">Ładuję…</div>
 
     <div v-else class="space-y-6">
-      <!-- Krok 1: Założ pracownika -->
+      <!-- Krok 1: Załóż konto -->
       <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <span class="inline-flex items-center justify-center h-7 w-7 rounded-full bg-primary-100 text-primary-700 text-sm font-bold">1</span>
@@ -109,70 +135,160 @@ async function copy(label: string, text: string) {
           W zakładce <RouterLink to="/users" class="text-primary-600 hover:underline">Użytkownicy</RouterLink>
           stwórz konto pracownika (email + hasło). W zakładce
           <RouterLink to="/roles" class="text-primary-600 hover:underline">Role</RouterLink>
-          przypisz mu rolę z odpowiednim zestawem skili. Pracownik dostanie tylko te skille, które zawierają jego role.
+          przypisz mu rolę z odpowiednim zestawem skili.
         </p>
       </div>
 
-      <!-- Krok 2: Komendy instalacyjne -->
+      <!-- Krok 2: Pobranie aplikacji -->
       <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <span class="inline-flex items-center justify-center h-7 w-7 rounded-full bg-primary-100 text-primary-700 text-sm font-bold">2</span>
-          <CommandLineIcon class="h-5 w-5" /> Komendy instalacyjne
+          <ArrowDownTrayIcon class="h-5 w-5" /> Pobierz aplikację Future Hub Desktop
         </h2>
         <p class="mt-2 text-sm text-gray-600">
-          Pracownik wkleja jedną z poniższych komend w terminal i podaje swój email + hasło.
+          Pracownik pobiera aplikację dla swojego systemu i instaluje. Po pierwszym uruchomieniu loguje się emailem i hasłem.
         </p>
 
-        <div class="mt-4 space-y-4">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-xs font-semibold text-gray-700 uppercase">macOS / Linux (terminal)</span>
-              <button
-                @click="copy('mac', cmdMac)"
-                class="inline-flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800"
-              >
-                <CheckIcon v-if="copied === 'mac'" class="h-4 w-4" />
-                <ClipboardDocumentIcon v-else class="h-4 w-4" />
-                {{ copied === 'mac' ? 'Skopiowano' : 'Kopiuj' }}
-              </button>
+        <div v-if="manifest && !manifest.available" class="mt-4 bg-amber-50 border border-amber-200 rounded p-4 text-sm text-amber-900">
+          Aplikacje desktop nie są jeszcze opublikowane. Pierwsze wydanie pojawi się po push tagu <code class="font-mono">desktop-v1.0.0</code> w GitHub.
+          Linki będą dostępne automatycznie. W międzyczasie skorzystaj z trybu CLI poniżej.
+        </div>
+
+        <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- macOS card -->
+          <div
+            :class="[
+              'border rounded-lg p-5 flex flex-col',
+              detectedOs === 'mac' ? 'border-primary-500 ring-2 ring-primary-200' : 'border-gray-200',
+            ]"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">macOS</h3>
+              <span v-if="detectedOs === 'mac'" class="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">Twój system</span>
             </div>
-            <pre class="bg-gray-900 text-gray-100 rounded p-3 text-xs overflow-x-auto"><code>{{ cmdMac }}</code></pre>
+            <p class="text-xs text-gray-500">Format: <span class="font-mono">.dmg</span></p>
+            <p class="text-xs text-gray-500" v-if="manifest?.version">v{{ manifest.version }} · {{ fmtSize(manifest.sizes.mac) }}</p>
+            <p class="text-xs text-gray-400" v-else>—</p>
+            <a
+              v-if="manifest?.urls.mac"
+              :href="manifest.urls.mac"
+              class="mt-4 block text-center bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 rounded"
+            >
+              Pobierz dla macOS
+            </a>
+            <button v-else disabled class="mt-4 block text-center bg-gray-200 text-gray-500 text-sm font-medium py-2 rounded cursor-not-allowed">
+              Niedostępne
+            </button>
           </div>
 
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-xs font-semibold text-gray-700 uppercase">Windows (PowerShell)</span>
-              <button
-                @click="copy('win', cmdWin)"
-                class="inline-flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800"
+          <!-- Windows card -->
+          <div
+            :class="[
+              'border rounded-lg p-5 flex flex-col',
+              detectedOs === 'win' ? 'border-primary-500 ring-2 ring-primary-200' : 'border-gray-200',
+            ]"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">Windows</h3>
+              <span v-if="detectedOs === 'win'" class="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">Twój system</span>
+            </div>
+            <p class="text-xs text-gray-500">Format: <span class="font-mono">.exe</span> (NSIS)</p>
+            <p class="text-xs text-gray-500" v-if="manifest?.version">v{{ manifest.version }} · {{ fmtSize(manifest.sizes.win) }}</p>
+            <p class="text-xs text-gray-400" v-else>—</p>
+            <a
+              v-if="manifest?.urls.win"
+              :href="manifest.urls.win"
+              class="mt-4 block text-center bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 rounded"
+            >
+              Pobierz dla Windows
+            </a>
+            <button v-else disabled class="mt-4 block text-center bg-gray-200 text-gray-500 text-sm font-medium py-2 rounded cursor-not-allowed">
+              Niedostępne
+            </button>
+          </div>
+
+          <!-- Linux card -->
+          <div
+            :class="[
+              'border rounded-lg p-5 flex flex-col',
+              detectedOs === 'linux' ? 'border-primary-500 ring-2 ring-primary-200' : 'border-gray-200',
+            ]"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-gray-900">Linux</h3>
+              <span v-if="detectedOs === 'linux'" class="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">Twój system</span>
+            </div>
+            <p class="text-xs text-gray-500">Format: <span class="font-mono">AppImage</span> / <span class="font-mono">.deb</span></p>
+            <p class="text-xs text-gray-500" v-if="manifest?.version">v{{ manifest.version }} · {{ fmtSize(manifest.sizes.linuxAppImage) }}</p>
+            <p class="text-xs text-gray-400" v-else>—</p>
+            <div class="mt-4 space-y-2">
+              <a
+                v-if="manifest?.urls.linuxAppImage"
+                :href="manifest.urls.linuxAppImage"
+                class="block text-center bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 rounded"
               >
-                <CheckIcon v-if="copied === 'win'" class="h-4 w-4" />
-                <ClipboardDocumentIcon v-else class="h-4 w-4" />
-                {{ copied === 'win' ? 'Skopiowano' : 'Kopiuj' }}
+                AppImage
+              </a>
+              <a
+                v-if="manifest?.urls.linuxDeb"
+                :href="manifest.urls.linuxDeb"
+                class="block text-center bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 rounded"
+              >
+                .deb (Ubuntu/Debian)
+              </a>
+              <button
+                v-if="!manifest?.urls.linuxAppImage && !manifest?.urls.linuxDeb"
+                disabled
+                class="block w-full text-center bg-gray-200 text-gray-500 text-sm font-medium py-2 rounded cursor-not-allowed"
+              >
+                Niedostępne
               </button>
             </div>
-            <pre class="bg-gray-900 text-gray-100 rounded p-3 text-xs overflow-x-auto"><code>{{ cmdWin }}</code></pre>
           </div>
         </div>
 
-        <p class="mt-3 text-xs text-gray-500">
-          Skrypt: utworzy katalog <code class="bg-gray-100 px-1 rounded">~/{{ companyName }}/</code> z podkatalogami
-          <code class="bg-gray-100 px-1 rounded">skills/</code> i <code class="bg-gray-100 px-1 rounded">docs/</code>,
-          zainstaluje CLI <code class="bg-gray-100 px-1 rounded">fh</code>, włączy auto-sync co 10 min.
-        </p>
+        <details class="mt-5 text-sm">
+          <summary class="cursor-pointer text-gray-600 hover:text-gray-900 select-none">Zaawansowane: instalacja przez CLI (legacy)</summary>
+          <div class="mt-4 space-y-4 pl-2">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-semibold text-gray-700 uppercase">macOS / Linux</span>
+                <button @click="copy('mac', cmdMac)" class="inline-flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800">
+                  <CheckIcon v-if="copied === 'mac'" class="h-4 w-4" />
+                  <ClipboardDocumentIcon v-else class="h-4 w-4" />
+                  {{ copied === 'mac' ? 'Skopiowano' : 'Kopiuj' }}
+                </button>
+              </div>
+              <pre class="bg-gray-900 text-gray-100 rounded p-3 text-xs overflow-x-auto"><code>{{ cmdMac }}</code></pre>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-semibold text-gray-700 uppercase">Windows (PowerShell)</span>
+                <button @click="copy('win', cmdWin)" class="inline-flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800">
+                  <CheckIcon v-if="copied === 'win'" class="h-4 w-4" />
+                  <ClipboardDocumentIcon v-else class="h-4 w-4" />
+                  {{ copied === 'win' ? 'Skopiowano' : 'Kopiuj' }}
+                </button>
+              </div>
+              <pre class="bg-gray-900 text-gray-100 rounded p-3 text-xs overflow-x-auto"><code>{{ cmdWin }}</code></pre>
+            </div>
+            <p class="text-xs text-gray-500">
+              <CommandLineIcon class="h-3 w-3 inline" /> CLI tworzy ten sam katalog <code class="bg-gray-100 px-1 rounded">~/{{ companyName }}/</code>.
+              Aplikacja desktop wykryje istniejącą instalację i przejmie kontrolę.
+            </p>
+          </div>
+        </details>
       </div>
 
-      <!-- Krok 3: Onboarding dla agenta AI -->
+      <!-- Krok 3: Onboarding -->
       <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <span class="inline-flex items-center justify-center h-7 w-7 rounded-full bg-primary-100 text-primary-700 text-sm font-bold">3</span>
           <DocumentTextIcon class="h-5 w-5" /> Instrukcja dla agenta AI (onboarding.md)
         </h2>
         <p class="mt-2 text-sm text-gray-600">
-          Pracownik otwiera URL, kopiuje całą zawartość i wkleja jako pierwszą wiadomość do Claude. Agent
-          poprowadzi go przez instalację i wskaże, gdzie szukać skili.
+          Pracownik otwiera URL, kopiuje całą zawartość i wkleja jako pierwszą wiadomość do Claude.
         </p>
-
         <div class="mt-4 flex flex-wrap gap-3">
           <a
             :href="onboardingUrl"
@@ -180,8 +296,7 @@ async function copy(label: string, text: string) {
             rel="noopener noreferrer"
             class="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm rounded hover:bg-primary-700"
           >
-            <DocumentTextIcon class="h-4 w-4" />
-            Otwórz instrukcję
+            <DocumentTextIcon class="h-4 w-4" /> Otwórz instrukcję
           </a>
           <button
             @click="copy('onb', onboardingUrl)"
@@ -194,22 +309,15 @@ async function copy(label: string, text: string) {
         </div>
       </div>
 
-      <!-- Krok 4: Email szablon -->
+      <!-- Krok 4: Email -->
       <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
           <span class="inline-flex items-center justify-center h-7 w-7 rounded-full bg-primary-100 text-primary-700 text-sm font-bold">4</span>
           <EnvelopeIcon class="h-5 w-5" /> Szablon e-maila do pracownika
         </h2>
-        <p class="mt-2 text-sm text-gray-600">
-          Skopiuj treść poniżej, podstaw email + hasło pracownika i wyślij.
-        </p>
-
         <div class="mt-4">
           <div class="flex justify-end mb-1">
-            <button
-              @click="copy('mail', emailTemplate)"
-              class="inline-flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800"
-            >
+            <button @click="copy('mail', emailTemplate)" class="inline-flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800">
               <CheckIcon v-if="copied === 'mail'" class="h-4 w-4" />
               <ClipboardDocumentIcon v-else class="h-4 w-4" />
               {{ copied === 'mail' ? 'Skopiowano' : 'Kopiuj e-mail' }}
@@ -219,53 +327,13 @@ async function copy(label: string, text: string) {
         </div>
       </div>
 
-      <!-- Linki bezpośrednie -->
-      <div class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <ArrowDownTrayIcon class="h-5 w-5" /> Bezpośrednie linki
-        </h2>
-        <dl class="mt-3 grid grid-cols-1 gap-2 text-sm">
-          <div class="flex items-center justify-between gap-3 py-2 border-b border-gray-100">
-            <dt class="text-gray-600">Skrypt instalacyjny — macOS / Linux</dt>
-            <dd class="font-mono text-xs text-gray-900 break-all flex items-center gap-2">
-              <a :href="installShUrl" target="_blank" class="text-primary-600 hover:underline">{{ installShUrl }}</a>
-              <button @click="copy('sh', installShUrl)" class="text-gray-400 hover:text-gray-700">
-                <CheckIcon v-if="copied === 'sh'" class="h-4 w-4" />
-                <ClipboardDocumentIcon v-else class="h-4 w-4" />
-              </button>
-            </dd>
-          </div>
-          <div class="flex items-center justify-between gap-3 py-2 border-b border-gray-100">
-            <dt class="text-gray-600">Skrypt instalacyjny — Windows</dt>
-            <dd class="font-mono text-xs text-gray-900 break-all flex items-center gap-2">
-              <a :href="installPs1Url" target="_blank" class="text-primary-600 hover:underline">{{ installPs1Url }}</a>
-              <button @click="copy('ps1', installPs1Url)" class="text-gray-400 hover:text-gray-700">
-                <CheckIcon v-if="copied === 'ps1'" class="h-4 w-4" />
-                <ClipboardDocumentIcon v-else class="h-4 w-4" />
-              </button>
-            </dd>
-          </div>
-          <div class="flex items-center justify-between gap-3 py-2">
-            <dt class="text-gray-600">Onboarding dla agenta AI</dt>
-            <dd class="font-mono text-xs text-gray-900 break-all flex items-center gap-2">
-              <a :href="onboardingUrl" target="_blank" class="text-primary-600 hover:underline">{{ onboardingUrl }}</a>
-              <button @click="copy('onb2', onboardingUrl)" class="text-gray-400 hover:text-gray-700">
-                <CheckIcon v-if="copied === 'onb2'" class="h-4 w-4" />
-                <ClipboardDocumentIcon v-else class="h-4 w-4" />
-              </button>
-            </dd>
-          </div>
-        </dl>
-      </div>
-
       <!-- Cofnięcie dostępu -->
       <div class="bg-amber-50 border border-amber-200 rounded-lg p-5 text-sm text-amber-900">
         <h3 class="font-semibold mb-1">Cofnięcie dostępu pracownikowi</h3>
         <p>
           Wystarczy że odbierzesz mu rolę / dezaktywujesz konto w
           <RouterLink to="/users" class="underline">Użytkownikach</RouterLink>.
-          W ciągu 10 min auto-sync usunie pliki skili z dysku pracownika. Jeśli całkowicie zdezaktywujesz
-          konto — refresh token przestanie działać i CLI wyczyści cały katalog.
+          W ciągu 10 min auto-sync usunie pliki skili z dysku pracownika. Jeśli całkowicie zdezaktywujesz konto — refresh token przestanie działać i aplikacja wyczyści cały katalog.
         </p>
       </div>
     </div>
