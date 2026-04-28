@@ -25,12 +25,19 @@ echo
 info "Future Hub installer — $COMPANY_NAME"
 echo
 
-if [ ! -t 0 ] && [ -e /dev/tty ]; then
-  exec < /dev/tty
+if [ ! -e /dev/tty ]; then
+  err "Brak /dev/tty. Uzyj: bash <(curl -fsSL $API_BASE/api/installer/install.sh)"
+  exit 1
 fi
-read -r -p "Email: " EMAIL
-read -r -s -p "Haslo: " PASS
+printf "Email: "
+IFS= read -r EMAIL < /dev/tty
+printf "Haslo: "
+IFS= read -r -s PASS < /dev/tty
 echo
+if [ -z "$EMAIL" ] || [ -z "$PASS" ]; then
+  err "Email i haslo sa wymagane."
+  exit 1
+fi
 
 LOGIN_BODY=$(jq -nc --arg e "$EMAIL" --arg p "$PASS" '{email:$e,password:$p}')
 LOGIN_RES=$(curl -sS -X POST "$API_BASE/api/auth/login" \\
